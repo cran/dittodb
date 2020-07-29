@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jonathan Keane" />
 
-<meta name="date" content="2020-07-19" />
+<meta name="date" content="2020-07-28" />
 
 <title>Getting Started with {dittodb}</title>
 
@@ -26,22 +26,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
     if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
     a = h.attributes;
     while (a.length > 0) h.removeAttribute(a[0].name);
-  }
-});
-</script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
   }
 });
 </script>
@@ -331,7 +315,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Getting Started with {dittodb}</h1>
 <h4 class="author">Jonathan Keane</h4>
-<h4 class="date">2020-07-19</h4>
+<h4 class="date">2020-07-28</h4>
 
 
 
@@ -341,63 +325,63 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>To get started, imagine that we are working on a package that queries a database that consists of the <a href="nycflights.html">nycflights13 data</a>. We have the following function which takes a column to aggregate by and returns a dataframe with that column and the mean delay for groups based on the values in the column name given.</p>
 <div id="rmariadb" class="section level3">
 <h3>RMariaDB</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(DBI)</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(</span>
-<span id="cb1-5"><a href="#cb1-5"></a>    RMariaDB<span class="op">::</span><span class="kw">MariaDB</span>(),</span>
-<span id="cb1-6"><a href="#cb1-6"></a>    <span class="dt">dbname =</span> <span class="st">&quot;nycflights&quot;</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>  )</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
-<span id="cb1-9"><a href="#cb1-9"></a>  </span>
-<span id="cb1-10"><a href="#cb1-10"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
-<span id="cb1-11"><a href="#cb1-11"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
-<span id="cb1-12"><a href="#cb1-12"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>  )</span>
-<span id="cb1-14"><a href="#cb1-14"></a>  </span>
-<span id="cb1-15"><a href="#cb1-15"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
-<span id="cb1-16"><a href="#cb1-16"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    RMariaDB<span class="op">::</span><span class="kw">MariaDB</span>(),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="dt">dbname =</span> <span class="st">&quot;nycflights&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>  )</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>  )</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>  </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>}</span></code></pre></div>
 </div>
 <div id="rpostgres" class="section level3">
 <h3>RPostgres</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(DBI)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    <span class="dt">dbname =</span> <span class="st">&quot;nycflights&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a>  )</span>
-<span id="cb2-8"><a href="#cb2-8"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
-<span id="cb2-9"><a href="#cb2-9"></a>  </span>
-<span id="cb2-10"><a href="#cb2-10"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
-<span id="cb2-11"><a href="#cb2-11"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
-<span id="cb2-12"><a href="#cb2-12"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a>  )</span>
-<span id="cb2-14"><a href="#cb2-14"></a>  </span>
-<span id="cb2-15"><a href="#cb2-15"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
-<span id="cb2-16"><a href="#cb2-16"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>    RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>    <span class="dt">dbname =</span> <span class="st">&quot;nycflights&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>  )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>}</span></code></pre></div>
 </div>
 <div id="rsqlite" class="section level3">
 <h3>RSQLite</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(DBI)</span>
-<span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>())</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  </span>
-<span id="cb3-7"><a href="#cb3-7"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
-<span id="cb3-8"><a href="#cb3-8"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
-<span id="cb3-9"><a href="#cb3-9"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a>  )</span>
-<span id="cb3-11"><a href="#cb3-11"></a>  </span>
-<span id="cb3-12"><a href="#cb3-12"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
-<span id="cb3-13"><a href="#cb3-13"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>mean_delays &lt;-<span class="st"> </span><span class="cf">function</span>(group_col) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>())</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">on.exit</span>(<span class="kw">dbDisconnect</span>(con))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>  query &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>    <span class="st">&quot;SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights &quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>    <span class="st">&quot;WHERE arr_delay &gt; 0 GROUP BY {group_col}&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>  )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>  </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">dbGetQuery</span>(con, query))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>}</span></code></pre></div>
 </div>
 </div>
 <div id="section" class="section level2 unlisted unnumbered">
 <h2 class="unlisted unnumbered"></h2>
 <p>If we give it the column <code>&quot;month&quot;</code>, we get the following dataframe:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt;    month mean_delay
 #&gt; 1      1   34.47749
 #&gt; 2      2   33.68921
@@ -412,66 +396,66 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 #&gt; 11    11   27.48459
 #&gt; 12    12   39.72725</code></pre>
 <p>Great, now that we have our function we want to test it to make sure it is operating as expected. Normally, we could write something like:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">library</span>(testthat)</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
-<span id="cb6-4"><a href="#cb6-4"></a>  out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a>  <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
-<span id="cb6-6"><a href="#cb6-6"></a>  <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb6-7"><a href="#cb6-7"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">library</span>(testthat)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>  <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>})</span></code></pre></div>
 <p>And this works just fine if we only ever run your tests locally, but if we want to <a href="http://r-pkgs.had.co.nz/check.html#check">run our tests with a Continuous Integration system</a> (and yes, we want to do that!), this won’t work without first setting up our production database of flights. For our tests, we don’t actually need to connect to the database and get new data (and, in fact, that would make some tests fail erroneously suddenly if the underlying changed). Instead, what we want is to take a snapshot of what happens when running the test code, and then be able to use that snapshot when we run tests later. These snapshots are frequently called fixtures (though you might hear people use other names like stubs or mocks).</p>
 </div>
 <div id="recording-fixtures" class="section level1">
 <h1>Recording fixtures</h1>
 <p>We can record fixtures of the database interactions with the commands <code>start_db_capturing()</code>, run the functions we want to record, and then stop recording with <code>stop_db_capturing()</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">start_db_capturing</span>()</span>
-<span id="cb7-2"><a href="#cb7-2"></a>out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="kw">stop_db_capturing</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">start_db_capturing</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="kw">stop_db_capturing</span>()</span></code></pre></div>
 <p>This will write a new folder (by default in <code>./tests/testthat/</code>) with the name of the database (here: <code>nycflights</code>) and then write one file with the name <code>SELECT-e53189.R</code> which is the fixture for this example. This <code>SELECT-*</code> file contains the data that was received from the database for use in tests.</p>
 </div>
 <div id="with_mock_db" class="section level1">
 <h1><code>with_mock_db()</code></h1>
 <p>Now that we have a fixture, we can use that fixture by wrapping our call that includes a database interaction with the function <code>with_mock_db()</code>. This will look for fixtures and use those.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">with_mock_db</span>(</span>
-<span id="cb8-2"><a href="#cb8-2"></a>  <span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a>)</span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt;    month mean_delay</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; 1      1   34.47749</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; 2      2   33.68921</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; 3      3   40.57166</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; 4      4   42.73958</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; 5      5   41.88586</span></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; 6      6   53.73827</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; 7      7   53.95152</span></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; 8      8   39.51294</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; 9      9   38.80555</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; 10    10   29.03665</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; 11    11   27.48459</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; 12    12   39.72725</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">with_mock_db</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>  <span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="co">#&gt;    month mean_delay</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="co">#&gt; 1      1   34.47749</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="co">#&gt; 2      2   33.68921</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="co">#&gt; 3      3   40.57166</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="co">#&gt; 4      4   42.73958</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="co">#&gt; 5      5   41.88586</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a><span class="co">#&gt; 6      6   53.73827</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a><span class="co">#&gt; 7      7   53.95152</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a><span class="co">#&gt; 8      8   39.51294</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a><span class="co">#&gt; 9      9   38.80555</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true"></a><span class="co">#&gt; 10    10   29.03665</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true"></a><span class="co">#&gt; 11    11   27.48459</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true"></a><span class="co">#&gt; 12    12   39.72725</span></span></code></pre></div>
 <p>So, now we can write our tests like:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(testthat)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">library</span>(dittodb)</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="kw">with_mock_db</span>(</span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
-<span id="cb9-7"><a href="#cb9-7"></a>    <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
-<span id="cb9-8"><a href="#cb9-8"></a>    <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
-<span id="cb9-9"><a href="#cb9-9"></a>  })</span>
-<span id="cb9-10"><a href="#cb9-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">library</span>(testthat)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="kw">library</span>(dittodb)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="kw">with_mock_db</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>  <span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>    out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;month&quot;</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>    <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;month&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>    <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">2</span>))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>  })</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>)</span></code></pre></div>
 <p>When placed inside of <code>with_mock_db(...)</code> a call to <code>mean_delays(&quot;month&quot;)</code> will return what we saved as our fixture <em>as if it had actually connected to the database</em> without needing the database to be installed, reachable, operational, or to exist at all anywhere.</p>
 <p>If we wanted to test that a day-based aggregation works, we can! Although we will have to make a new fixture. First we would run the following interactively:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">start_db_capturing</span>()</span>
-<span id="cb10-2"><a href="#cb10-2"></a>out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;day&quot;</span>)</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">stop_db_capturing</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">start_db_capturing</span>()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;day&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="kw">stop_db_capturing</span>()</span></code></pre></div>
 <p>This will create a new file (<code>SELECT-16d120.R</code>) which contains the response when aggregating by day. dittodb saves each database interaction with a hash of the query that is sent, so that a number of different responses from a database can be saved and the correct one will be used when called inside of <code>with_mock_db(...)</code>. So now, we could write our new test with:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">with_mock_db</span>(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
-<span id="cb11-3"><a href="#cb11-3"></a>    out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;day&quot;</span>)</span>
-<span id="cb11-4"><a href="#cb11-4"></a>    <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;day&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">31</span>, <span class="dv">2</span>))</span>
-<span id="cb11-6"><a href="#cb11-6"></a>  })</span>
-<span id="cb11-7"><a href="#cb11-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">with_mock_db</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  <span class="kw">test_that</span>(<span class="st">&quot;mean_delays()&quot;</span>, {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>    out &lt;-<span class="st"> </span><span class="kw">mean_delays</span>(<span class="st">&quot;day&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>    <span class="kw">expect_named</span>(out, <span class="kw">c</span>(<span class="st">&quot;day&quot;</span>, <span class="st">&quot;mean_delay&quot;</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>    <span class="kw">expect_equal</span>(<span class="kw">dim</span>(out), <span class="kw">c</span>(<span class="dv">31</span>, <span class="dv">2</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>  })</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a>)</span></code></pre></div>
 </div>
 <div id="getting-setup-to-use-dittodb" class="section level1">
 <h1>Getting setup to use {dittodb}</h1>
@@ -509,14 +493,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>When we use <code>start_db_recording()</code> to record fixtures, we are creating what some people call fixtures (though other terms for these abound). These are files that are used during testing to represent and provide some data or state necessary to execute the test. In the case of dittodb, these files contain the data that dittodb uses when it pretends to be a live database. During recording, each query that is sent to the database gets a unique identifier (the first 6 digits of the hash of the query) and when the response is received, that response is saved to a file with the first SQL (Structured Query Language) verb (e.g. <code>SELECT</code>), a dash, and the hash using the <code>dput()</code> function. This lets you craft a fixture that tests exactly what you need to without having extraneous rows or columns that might not be relevant.</p>
 <p>You can save our own responses for queries by getting figuring out the hash (the easiest way to do this now is to write the test that you want to create a fixture for, run it and see the error message that looks something like “Couldn’t find the file nycflights/SELECT-16d120.R in any of the mock directories.” and use the filename from there.) and then saving the dataframe that you want the test to use with the command <code>dput(df, file = &quot;nycflights/SELECT-16d120.R&quot;, control = c(&quot;all&quot;, &quot;hexNumeric&quot;))</code> (if the dataframe you want to save is <code>df</code> and we are using the path we saw in the example error message). And you’ve created your own fixture!</p>
 <p>You can also take the approach of recording fixtures and then editing them manually to pare them down. The workflow for that would be something like:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># read in the recorded fixture</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>df_fixt &lt;-<span class="st"> </span><span class="kw">source</span>(<span class="st">&quot;nycflights/SELECT-16d120.R&quot;</span>, <span class="dt">keep.source =</span> <span class="ot">FALSE</span>)<span class="op">$</span>value</span>
-<span id="cb13-3"><a href="#cb13-3"></a></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># filter out anything after february and all days after the 9th of the month</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a>df_fixt &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(df_fixt, month <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>day <span class="op">&lt;</span><span class="st"> </span><span class="dv">10</span>)</span>
-<span id="cb13-6"><a href="#cb13-6"></a></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="co"># save the fixture for use in tests</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="kw">dput</span>(df_fixt, <span class="dt">file =</span> <span class="st">&quot;nycflights/SELECT-16d120.R&quot;</span>, <span class="dt">control =</span> <span class="kw">c</span>(<span class="st">&quot;all&quot;</span>, <span class="st">&quot;hexNumeric&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># read in the recorded fixture</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>df_fixt &lt;-<span class="st"> </span><span class="kw">source</span>(<span class="st">&quot;nycflights/SELECT-16d120.R&quot;</span>, <span class="dt">keep.source =</span> <span class="ot">FALSE</span>)<span class="op">$</span>value</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="co"># filter out anything after february and all days after the 9th of the month</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>df_fixt &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(df_fixt, month <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>day <span class="op">&lt;</span><span class="st"> </span><span class="dv">10</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a><span class="co"># save the fixture for use in tests</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a><span class="kw">dput</span>(df_fixt, <span class="dt">file =</span> <span class="st">&quot;nycflights/SELECT-16d120.R&quot;</span>, <span class="dt">control =</span> <span class="kw">c</span>(<span class="st">&quot;all&quot;</span>, <span class="st">&quot;hexNumeric&quot;</span>))</span></code></pre></div>
 </div>
 </div>
 

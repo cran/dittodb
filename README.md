@@ -1,11 +1,11 @@
 # dittodb
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/dittodb)](https://CRAN.R-project.org/package=dittodb)
+[![macOS](https://github.com/ropensci/dittodb/workflows/check-macOS/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-macOS)
+[![Linux](https://github.com/ropensci/dittodb/workflows/check-linux/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-linux)
 [![Windows](https://github.com/ropensci/dittodb/workflows/check-windows/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-windows)
-[![Mac](https://github.com/ropensci/dittodb/workflows/check-mac/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-mac)
-[![Linux](https://github.com/ropensci/dittodb/workflows/check-linux-ubuntu/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-linux-ubuntu)
 [![Codecov test coverage](https://codecov.io/gh/ropensci/dittodb/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci/dittodb?branch=main)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![CRAN status](https://www.r-pkg.org/badges/version/dittodb)](https://CRAN.R-project.org/package=dittodb)
 <!-- badges: end -->
 
 
@@ -130,19 +130,13 @@ with_mock_db({
 All without having to ever set a database up on Travis or GitHub Actions 🎉
 
 ## Installation
-Currently, {dittodb} is not on CRAN (The Comprehensive R Archive Network). You can install from source, or use {remotes}:
+Currently, {dittodb} is on CRAN (The Comprehensive R Archive Network), so you can install it with `install.packages("dittodb")`. 
 
-```r
-remotes::install_github("ropensci/dittodb@main")
-```
+### Installing a development version
 
-_Note_ the `@main` at the end is necessary until the {remotes} package [is updated](https://github.com/r-lib/remotes/issues/508) to use the default branch specified for GitHub repositories rather than the hard coded name it currently uses.
+If you would like to use the development version, you can install from GitHub with: `remotes::install_github("ropensci/dittodb")`
 
-An alternative method of installation is to use `remotes::git()` directly:
-
-```r
-remotes::install_git("https://github.com/ropensci/dittodb.git")
-```
+_Note_ You may need to add `@main` at the end if you are using a version of {remotes} prior to 2.2.0. Alternatively, you can use `remotes::install_git()` directly: `remotes::install_git("https://github.com/ropensci/dittodb.git")`
 
 ## Setup a package to use {dittodb}
 Use the function `dittodb::use_dittodb()` to easily get started using {dittodb}. It will add {dittodb} to `Suggests` in the `DESCRIPTION` file and add `library(dittodb)` to `tests/testthat/helper.R`.
