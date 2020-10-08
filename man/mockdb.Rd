@@ -40,7 +40,8 @@ Connections should be made after \code{start_mock_db()} if you're using that
 function or they should be made inside of \code{with_mock_db()} if you're using
 that function because {dittodb} uses the database name (given in \code{dbname} or
 \code{Database} argument of \code{\link{dbConnect}} depending on the driver) to separate
-different fixtures.
+different fixtures. For ODBC connections with only a dsn provided, the dsn is
+used for this directory.
 }
 \examples{
 # Add the mocks included with dittodb to the db_mock_paths to use them below
@@ -59,7 +60,7 @@ if (check_for_pkg("RSQLite", message) & check_for_pkg("testthat", message)) {
         con,
         "SELECT carrier, name FROM airlines LIMIT 1"
       )
-      testthat::expect_is(one_airline, "data.frame")
+      testthat::expect_s3_class(one_airline, "data.frame")
       testthat::expect_equal(nrow(one_airline), 1)
       testthat::expect_equal(one_airline$carrier, "9E")
       testthat::expect_equal(one_airline$name, "Endeavor Air Inc.")
@@ -80,7 +81,7 @@ if (check_for_pkg("RSQLite", message) & check_for_pkg("testthat", message)) {
       con,
       "SELECT carrier, name FROM airlines LIMIT 1"
     )
-    testthat::expect_is(one_airline, "data.frame")
+    testthat::expect_s3_class(one_airline, "data.frame")
     testthat::expect_equal(nrow(one_airline), 1)
     testthat::expect_equal(one_airline$carrier, "9E")
     testthat::expect_equal(one_airline$name, "Endeavor Air Inc.")

@@ -1,6 +1,8 @@
 ️
 Codecov
+dbplyr
 dbplyr's
+dsn
 erroring
 fs
 httptest
@@ -11,6 +13,7 @@ macOS
 MDW
 nycflights
 odbc
+ODBC
 ORD
 Postgres
 prepopulated

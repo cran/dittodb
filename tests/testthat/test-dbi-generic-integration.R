@@ -46,8 +46,7 @@ db_pkgs <- list(
 # calls needed for test_that + dittodb + database calls.
 # nolint start
 for (pkg in names(db_pkgs)) {
-  context(glue("Integration tests for {pkg}"))
-  test_that(glue("Isolate {pkg}"), {
+  test_that(glue("Integration tests for {pkg}"), {
     skip_env(pkg)
 
     # setup the database that will be mocked and then tested
@@ -209,7 +208,7 @@ for (pkg in names(db_pkgs)) {
 
         # connection object ====
         test_that(glue("Our connection is a mock connection {pkg}"), {
-          expect_is(con, "DBIMockConnection")
+          expect_s4_class(con, "DBIMockConnection")
         })
 
         # dbGetQuery/dbSendquery ====
@@ -392,6 +391,11 @@ for (pkg in names(db_pkgs)) {
             rep(as.POSIXct("1988-10-11T17:00:00", tz = timezone), 2)
           )
         })
+
+        expect_sql(
+          dbGetQuery(con, "SELECT carrier FROM airlines LIMIT 4"),
+          "SELECT carrier FROM airlines LIMIT 4"
+        )
 
         dbDisconnect(con)
       })

@@ -3,18 +3,18 @@
 #  library(dbplyr)
 #  
 #  con_psql <- DBI::dbConnect(
-#    RPostgreSQL::PostgreSQL(),
-#    dbname = "",
+#    RPostgres::Postgres(),
+#    dbname = "nycflights",
 #    host = "127.0.0.1",
 #    user = getOption("dittodb.test.user"),
 #    password = getOption("dittodb.test.pw")
 #  )
-#  DBI::dbSendStatement(con, "CREATE DATABASE travelling")
+#  DBI::dbSendStatement(con_psql, "CREATE DATABASE travelling")
 #  DBI::dbDisconnect(con_psql)
 #  
 #  
 #  con_psql <- DBI::dbConnect(
-#    RPostgreSQL::PostgreSQL(),
+#    RPostgres::Postgres(),
 #    dbname = "travelling",
 #    host = "127.0.0.1",
 #    user = getOption("dittodb.test.user"),
@@ -23,9 +23,9 @@
 #  nycflights13_create_sql(con_psql)
 #  DBI::dbDisconnect(con_psql)
 #  
-#  start_db_capturing(path = "vignettes/")
+#  start_db_capturing(path = "./")
 #  con_psql <- DBI::dbConnect(
-#    RPostgreSQL::PostgreSQL(),
+#    RPostgres::Postgres(),
 #    dbname = "travelling",
 #    host = "127.0.0.1",
 #    user = getOption("dittodb.test.user"),
@@ -55,7 +55,7 @@ knitr::opts_chunk$set(eval = TRUE, message = FALSE, warning = FALSE)
 #  library(dbplyr)
 #  
 #  con_psql <- DBI::dbConnect(
-#    RPostgreSQL::PostgreSQL(),
+#    RPostgres::Postgres(),
 #    dbname = "travelling",
 #    host = "127.0.0.1",
 #    user = "m.ciccone"
@@ -73,7 +73,7 @@ knitr::opts_chunk$set(eval = TRUE, message = FALSE, warning = FALSE)
 #  start_db_capturing()
 #  
 #  con_psql <- DBI::dbConnect(
-#      RPostgreSQL::PostgreSQL(),
+#      RPostgres::Postgres(),
 #      dbname = "dittodb",
 #      host = "postgres.server",
 #      user = "m.ciccone"
@@ -100,7 +100,7 @@ library(dbplyr)
 # the chunk above would produce if it were able to connect
 with_mock_db({
   con_psql <- DBI::dbConnect(
-    RPostgreSQL::PostgreSQL(),
+    RPostgres::Postgres(),
     dbname = "travelling",
     host = "127.0.0.1",
     user = "m.ciccone"
@@ -108,7 +108,7 @@ with_mock_db({
 
   flights_delayed_from_mock <- tbl(con_psql, "flights") %>%
     filter(!is.na(tailnum)) %>%
-    filter(arr_delay >= 180) %>% 
+    filter(arr_delay >= 180) %>%
     select(tailnum) %>%
     distinct() %>% 
     collect()
@@ -122,7 +122,7 @@ TRUE
 ## -----------------------------------------------------------------------------
 with_mock_db({
   con_psql <- DBI::dbConnect(
-    RPostgreSQL::PostgreSQL(),
+    RPostgres::Postgres(),
     dbname = "travelling",
     host = "127.0.0.1",
     user = "m.ciccone"
