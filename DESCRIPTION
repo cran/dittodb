@@ -1,6 +1,6 @@
 Package: dittodb
 Title: A Test Environment for Database Requests
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person(given = "Jonathan",
            family = "Keane",
@@ -51,7 +51,7 @@ Collate: 'capture-requests.R' 'connection.R' 'dbExistsTable.R'
         'quote.R' 'redact.R' 'use-dittodb.R' 'utils.R'
 RdMacros: lifecycle
 NeedsCompilation: yes
-Packaged: 2020-10-08 02:30:09 UTC; jkeane
+Packaged: 2020-10-10 01:56:45 UTC; jkeane
 Author: Jonathan Keane [aut, cre] (<https://orcid.org/0000-0001-7087-9776>),
   Mauricio Vargas [aut] (<https://orcid.org/0000-0003-1017-7574>),
   Helen Miller [rev] (reviewed the package for rOpenSci, see
@@ -60,4 +60,4 @@ Author: Jonathan Keane [aut, cre] (<https://orcid.org/0000-0001-7087-9776>),
     https://github.com/ropensci/software-review/issues/366)
 Maintainer: Jonathan Keane <jkeane@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-10-08 04:30:02 UTC
+Date/Publication: 2020-10-10 06:20:02 UTC

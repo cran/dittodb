@@ -48,6 +48,11 @@ library(dittodb)
 # set the mockPaths for this vignette
 db_mock_paths("travelling")
 
+has_postgres <- check_for_pkg("RPostgres", func = warning)
+has_dbplyr <- check_for_pkg("dbplyr", func = warning)
+has_dplyr <- check_for_pkg("dplyr", func = warning)
+can_eval <- has_postgres & has_dbplyr & has_dplyr
+
 knitr::opts_chunk$set(eval = TRUE, message = FALSE, warning = FALSE)
 
 ## ---- error=TRUE, eval=FALSE--------------------------------------------------
@@ -92,7 +97,7 @@ knitr::opts_chunk$set(eval = TRUE, message = FALSE, warning = FALSE)
 #  
 #  stop_db_capturing()
 
-## ----cooking show trick, echo=FALSE-------------------------------------------
+## ----cooking show trick, echo=FALSE, eval=can_eval----------------------------
 library(dplyr)
 library(dbplyr)
 
@@ -119,7 +124,7 @@ with_mock_db({
 # `dbDisconnect` returns TRUE
 TRUE
 
-## -----------------------------------------------------------------------------
+## ---- eval=can_eval-----------------------------------------------------------
 with_mock_db({
   con_psql <- DBI::dbConnect(
     RPostgres::Postgres(),
