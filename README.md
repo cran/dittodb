@@ -4,16 +4,15 @@
 [![macOS](https://github.com/ropensci/dittodb/workflows/check-macOS/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-macOS)
 [![Linux](https://github.com/ropensci/dittodb/workflows/check-linux/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-linux)
 [![Windows](https://github.com/ropensci/dittodb/workflows/check-windows/badge.svg)](https://github.com/ropensci/dittodb/actions?workflow=check-windows)
-[![Codecov test coverage](https://codecov.io/gh/ropensci/dittodb/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci/dittodb?branch=main)
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Codecov test coverage](https://codecov.io/gh/ropensci/dittodb/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/dittodb?branch=main)
+[![Lifecycle: maturing](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
-
 
 {dittodb} is a package that makes testing against databases easy. When writing code that relies on interactions with databases, testing has been difficult without recreating test databases in your continuous integration (aka CI) environment, or resorting to using SQLite databases instead of the database engines you have in production. Both have their downsides: recreating database infrastructure is slow, error prone, and hard to iterate with. Using SQLite works well, right up until you use a feature (like [a full outer join](https://www.sqlite.org/omitted.html)) or has [quirks](https://www.sqlite.org/quirks.html) that might differ from your production database. {dittodb} solves this by recording database interactions, saving them as mocks, and then replaying them seamlessly during testing. This means that if you can get a query from your database, you can record the response and reliably reproduce that response in tests.
 
 {dittodb} is heavily inspired by [{httptest}](https://CRAN.R-project.org/package=httptest), if you've used {httptest} before, you'll find many of the interactions similar.
 
-## A quick example {.tabset}
+## A quick example
 Say we have a database with some [{nycflights}](https://CRAN.R-project.org/package=nycflights13) data in it and we are writing functions that query this data that we want to test. 
 
 For example, we have the simple function that retrieves one airline:
@@ -22,10 +21,11 @@ For example, we have the simple function that retrieves one airline:
 get_an_airline <- function(con) {
   return(dbGetQuery(con, "SELECT carrier, name FROM airlines LIMIT 1"))
 }
-
 ```
 
 But we want to make sure that this function returns what we expect. To do this, we first record the response we get from the production database:
+
+## {.tabset}
 
 ### RMariaDB
 ```r

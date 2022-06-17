@@ -38,12 +38,12 @@ mean_delays <- function(group_col) {
     dbname = "nycflights"
   )
   on.exit(dbDisconnect(con))
-  
+
   query <- glue::glue(
     "SELECT {group_col}, AVG(arr_delay) as mean_delay from nycflights13.flights ",
     "WHERE arr_delay > 0 GROUP BY {group_col}"
   )
-  
+
   return(dbGetQuery(con, query))
 }
 

@@ -22,40 +22,55 @@ setClass("DBIMockResult",
          contains = "DBIResult"
 )
 
+db_send_query <- function(conn, statement, ...) {
+  # create a new mock result with the type and a hash of the statement.
+  if (dittodb_debug_level(2)) {
+    message(
+      "Sending a query for the statement: \n", statement,
+      "\nwhich has been cleaned to: \n", clean_statement(statement),
+      "\nis being hased to: ", hash(statement)
+    )
+  } else if (dittodb_debug_level(1)) {
+    message(
+      "Sending a query for the statement: \n", statement,
+      "\nis being hased to: ", hash(statement)
+    )
+  }
+
+  # TDOO: if we are in expect_sql, then we should emit an error (or warning?) with SQL here
+  if (is_expecting()) {
+    stop(
+      "Fixture: ",
+      make_path(conn@path, get_type(statement), hash(statement)),
+      "\n",
+      clean_statement(statement),
+      call. = FALSE
+    )
+  }
+
+  return(new(
+    "DBIMockResult",
+    type = get_type(statement),
+    hash = hash(statement),
+    path = conn@path,
+    statement = statement
+  ))
+}
+
 #' @rdname mock-db-methods
 #' @importFrom methods setMethod new
 #' @export
-setMethod(
-  "dbSendQuery", signature("DBIMockConnection", "character"),
-  function(conn, statement, ...) {
-    # create a new mock result with the type and a hash of the statement.
-    if (dittodb_debug_level(1)) {
-      message(
-        "Sending a query for the statement: \n", statement,
-        "\nis being hased to: ", hash(statement)
-      )
-    }
+setMethod("dbSendQuery", signature("DBIMockConnection", "character"), db_send_query)
 
-    # TDOO: if we are in expect_sql, then we should emit an error (or warning?) with SQL here
-    if (is_expecting()) {
-      stop(
-        "Fixture: ",
-        make_path(conn@path, get_type(statement), hash(statement)),
-        "\n",
-        clean_statement(statement),
-        call. = FALSE
-      )
-    }
+#' @rdname mock-db-methods
+#' @importFrom methods setMethod new
+#' @export
+setMethod("dbSendQuery", signature("DBIMockConnection", "SQL"), db_send_query)
 
-    return(new(
-      "DBIMockResult",
-      type = get_type(statement),
-      hash = hash(statement),
-      path = conn@path,
-      statement = statement
-    ))
-  }
-)
+#' @rdname mock-db-methods
+#' @importFrom methods setMethod new
+#' @export
+setMethod("dbSendStatement", signature("DBIMockConnection", "character"), db_send_query)
 
 mock_fetch <- function(res, n, ...) {
   if (n != -1) {
@@ -73,7 +88,7 @@ setMethod("dbFetch", signature("DBIMockResult", "ANY"), mock_fetch)
 # use only fetch, so we need to mock both. The complication is that DBI's
 # dbFetch by default simply calls fetch which might lead to duplication
 
-# the @alaises shouldn't be necesary here, but neverthless is.
+# the @alaises shouldn't be necesary here, but nevertheless is.
 #' @rdname mock-db-methods
 #' @aliases fetch,DBIMockResult-method
 #' @export
@@ -114,5 +129,16 @@ setMethod(
     # https://github.com/tomoakin/RPostgreSQL/blob/master/RPostgreSQL/R/PostgreSQLSupport.R#L266 #nolint
     res <- dbSendQuery(conn, statement, ...)
     return(mock_fetch(res, -1))
+  }
+)
+
+#' @rdname mock-db-methods
+#' @export
+setMethod(
+  "dbGetRowsAffected",
+  "DBIMockResult",
+  function(res, ...) {
+    path <- make_path(res@path, "dbGetRowsAffected", res@hash)
+    return(read_file(find_file(path)))
   }
 )

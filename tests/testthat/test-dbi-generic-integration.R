@@ -44,7 +44,6 @@ db_pkgs <- list(
 
 # The lintr complains about cyclomatic complexity here because of the stacked
 # calls needed for test_that + dittodb + database calls.
-# nolint start
 for (pkg in names(db_pkgs)) {
   test_that(glue("Integration tests for {pkg}"), {
     skip_env(pkg)
@@ -70,6 +69,21 @@ for (pkg in names(db_pkgs)) {
     } else {
       airlines_table <- paste(schema, "airlines", sep = ".")
       flights_table <- paste(schema, "flights", sep = ".")
+    }
+
+    # slightly different ways to refer to tables/schemas
+    if (pkg == "RMariaDB") {
+      flights_table_obj <- "flights"
+      airlines_table_obj <- "airlines"
+      doesnotexist_table_obj <- "doesnotexist"
+    } else if (pkg == "RPostgreSQL") {
+      flights_table_obj <- c(schema = schema, table = "flights")
+      airlines_table_obj <- c(schema = schema, table = "airlines")
+      doesnotexist_table_obj <- c(schema = schema, table = "doesnotexist")
+    } else if (pkg %in% c("odbc", "RPostgres")) {
+      flights_table_obj <- Id(schema = schema, table = "flights")
+      airlines_table_obj <- Id(schema = schema, table = "airlines")
+      doesnotexist_table_obj <- Id(schema = schema, table = "doesnotexist")
     }
 
     test_that(glue("The fixture is what we expect: {pkg}"), {
@@ -108,42 +122,28 @@ for (pkg in names(db_pkgs)) {
       dbGetQuery(con, glue("SELECT * FROM {airlines_table} LIMIT 2"))
       dbGetQuery(con, glue("SELECT * FROM {airlines_table} LIMIT 1"))
 
+      # dbGetQuery + regex ====
+      if (pkg == "RMariaDB") {
+        dot_name_regex <- "`name` REGEXP '\\.'"
+      } else if (pkg == "RPostgres") {
+        dot_name_regex <- "\"name\" ~ E'\\.'"
+      } else if (pkg %in% c("odbc", "RPostgreSQL")) {
+        dot_name_regex <- "\"name\" ~ '\\.'"
+      }
+      dot_names <- dbGetQuery(
+        con,
+        glue("SELECT * FROM {airlines_table} WHERE ({dot_name_regex}) LIMIT 3")
+      )
+
       # dbListTables ====
       tables <- dbListTables(con)
 
       # dbListFields ====
-      # dbListFields is ever so slightly different for each
-      if (pkg == "RMariaDB") {
-        fields_flights <- dbListFields(con, "flights")
-      } else if (pkg == "odbc") {
-        fields_flights <- dbListFields(
-          con,
-          Id(schema = schema, table = "flights")
-        )
-      } else if (pkg == "RPostgreSQL") {
-        fields_flights <- dbListFields(con, c(schema, "flights"))
-      } else if (pkg == "RPostgres") {
-        fields_flights <- dbListFields(
-          con,
-          Id(schema = schema, table = "flights")
-        )
-      }
+      # dbListFields is ever so slightly different for RPostgresql
+      fields_flights <- dbListFields(con, flights_table_obj)
 
       # dbReadTable ====
-      if (pkg == "RMariaDB") {
-        airlines_expected <- dbReadTable(con, "airlines")
-      } else if (pkg == "odbc") {
-        airlines_expected <- dbReadTable(
-          con,
-          Id(schema = schema, table = "airlines")
-        )
-      } else if (pkg == "RPostgreSQL") {
-        airlines_expected <- dbReadTable(con, c(schema, "airlines"))
-      } else if (pkg == "RPostgres") {
-        airlines_expected <- dbReadTable(
-          con, Id(schema = schema, table = "airlines")
-        )
-      }
+      airlines_expected <- dbReadTable(con, airlines_table_obj)
 
       # dbClearResult ====
       res <- dbSendQuery(con, glue("SELECT * FROM {airlines_table} LIMIT 2"))
@@ -158,32 +158,55 @@ for (pkg in names(db_pkgs)) {
       dbClearResult(result)
 
       # dbExistsTable ====
-      # dbExistsTable is ever so slightly different for each
-      if (pkg == "RMariaDB") {
-        table_exists <- dbExistsTable(con, "airlines")
-        table_does_not_exist <- dbExistsTable(con, "doesnotexist")
-      } else if (pkg == "odbc") {
-        table_exists <- dbExistsTable(
-          con,
-          Id(schema = schema, table = "airlines")
-        )
-        table_does_not_exist <- dbExistsTable(
-          con,
-          Id(schema = schema, table = "doesnotexist")
-        )
-      } else if (pkg == "RPostgreSQL") {
-        table_exists <- dbExistsTable(con, c(schema, "airlines"))
-        table_does_not_exist <- dbExistsTable(con, c(schema, "doesnotexist"))
-      } else if (pkg == "RPostgres") {
-        table_exists <- dbExistsTable(
-          con,
-          Id(schema = schema, table = "airlines")
-        )
-        table_does_not_exist <- dbExistsTable(
-          con,
-          Id(schema = schema, table = "doesnotexist")
-        )
+      table_exists <- dbExistsTable(con, airlines_table_obj)
+      table_does_not_exist <- dbExistsTable(con, doesnotexist_table_obj)
+
+      # dplyr + a string ====
+      require(dbplyr, quietly = TRUE)
+      require(dplyr,  quietly = TRUE, warn.conflicts = FALSE)
+      if (pkg == "RPostgreSQL") {
+        # The _one_ place where RPostgreSQL needs `Id()` and not `c(schema, table)`
+        dest_ord <- tbl(con, Id(flights_table_obj)) %>%
+          filter(dest == "ORD") %>%
+          collect()
+      } else {
+        dest_ord <- tbl(con, flights_table_obj) %>%
+          filter(dest == "ORD") %>%
+          collect()
       }
+
+      # dplyr + a regex ====
+      if (pkg == "RPostgreSQL") {
+        # The _one_ place where RPostgreSQL needs `Id()` and not `c(schema, table)`
+        dot_names_dplyr <- tbl(con, Id(airlines_table_obj)) %>%
+          filter(str_detect(name, "\\.")) %>%
+          collect()
+      } else {
+        dot_names_dplyr <- tbl(con, airlines_table_obj) %>%
+          filter(str_detect(name, "\\.")) %>%
+          collect()
+      }
+
+      # joins with df ====
+      local_df <- nycflights13::airlines
+      local_df$name_cleaned <- gsub(" Inc.", "", local_df$name)
+      local_df$name <- NULL
+      # RPostgreSQL does not support creation of temp tables
+      if (pkg != "RPostgreSQL") {
+        airlines_and_cleaned <- tbl(con, airlines_table_obj) %>%
+          left_join(local_df, by = "carrier", copy = TRUE) %>%
+          collect()
+      }
+
+      # dbGetRowsAffected ====
+      res <- dbSendStatement(
+        con,
+        glue("CREATE TABLE new_one AS SELECT * FROM {airlines_table} LIMIT 4")
+      )
+      rows_affected <- dbGetRowsAffected(res)
+      dbClearResult(res)
+      # cleanup
+      dbClearResult(dbSendStatement(con, "DROP TABLE new_one"))
 
       dbDisconnect(con)
       stop_db_capturing()
@@ -249,6 +272,15 @@ for (pkg in names(db_pkgs)) {
           )
         })
 
+
+        # dbGetQuery + regex ====
+        # dot_name_regex is from above
+        out <- dbGetQuery(
+          con,
+          glue("SELECT * FROM {airlines_table} WHERE ({dot_name_regex}) LIMIT 3")
+        )
+        expect_identical(out, dot_names)
+
         # dbListTables ====
         test_that(glue("dbListTables() {pkg}"), {
           out <- dbListTables(con)
@@ -257,16 +289,7 @@ for (pkg in names(db_pkgs)) {
 
         # dbListFields ====
         test_that(glue("dbListFields() {pkg}"), {
-          # dbListFields is ever so slightly different for each
-          if (pkg == "RMariaDB") {
-            out <- dbListFields(con, "flights")
-          } else if (pkg == "odbc") {
-            out <- dbListFields(con, Id(schema = schema, table = "flights"))
-          } else if (pkg == "RPostgreSQL") {
-            out <- dbListFields(con, c(schema, "flights"))
-          } else if (pkg == "RPostgres") {
-            out <- dbListFields(con, Id(schema = schema, table = "flights"))
-          }
+          out <- dbListFields(con, flights_table_obj)
           expect_identical(out, fields_flights)
           expect_identical(out, c(
             "year", "month", "day", "dep_time", "sched_dep_time", "dep_delay",
@@ -278,16 +301,7 @@ for (pkg in names(db_pkgs)) {
 
         # dbReadTable ====
         test_that(glue("dbReadTable() {pkg}"), {
-          if (pkg == "RMariaDB") {
-            out <- dbReadTable(con, "airlines")
-          } else if (pkg == "odbc") {
-            out <- dbReadTable(con, Id(schema = schema, table = "airlines"))
-          } else if (pkg == "RPostgreSQL") {
-            out <- dbReadTable(con, c(schema, "airlines"))
-          } else if (pkg == "RPostgres") {
-            out <- dbReadTable(con, Id(schema = schema, table = "airlines"))
-          }
-          expect_identical(out, airlines_expected)
+          expect_identical(dbReadTable(con, airlines_table_obj), airlines_expected)
         })
 
         # dbClearResult====
@@ -311,13 +325,13 @@ for (pkg in names(db_pkgs)) {
         })
 
         # dbGetInfo ====
-        test_that("dbGetInfo", {
+        test_that(glue("dbGetInfo {pkg}"), {
           skip_if(pkg == "RPostgreSQL")
           out <- dbGetInfo(con)
           expect_identical(out, con_info)
         })
 
-        test_that("dbGetInfo", {
+        test_that(glue("simple query {pkg}"), {
           result <- dbSendQuery(
             con,
             glue("SELECT * FROM {airlines_table} LIMIT 4")
@@ -328,46 +342,86 @@ for (pkg in names(db_pkgs)) {
         })
 
         # dbExistsTable ====
-        test_that("dbGetInfo", {
-          if (pkg == "RMariaDB") {
-            expect_true(table_exists <- dbExistsTable(con, "airlines"))
-            expect_false(table_does_not_exist <- dbExistsTable(con, "doesnotexist"))
-          } else if (pkg == "odbc") {
-            expect_true(table_exists <- dbExistsTable(
-              con,
-              Id(schema = schema, table = "airlines")
-            ))
-            expect_false(table_does_not_exist <- dbExistsTable(
-              con,
-              Id(schema = schema, table = "doesnotexist")
-            ))
-          } else if (pkg == "RPostgreSQL") {
-            expect_true(table_exists <- dbExistsTable(con, c(schema, "airlines")))
-            expect_false(table_does_not_exist <- dbExistsTable(con, c(schema, "doesnotexist")))
-          } else if (pkg == "RPostgres") {
-            expect_true(table_exists <- dbExistsTable(
-              con,
-              Id(schema = schema, table = "airlines")
-            ))
-            expect_false(table_does_not_exist <- dbExistsTable(
-              con,
-              Id(schema = schema, table = "doesnotexist")
-            ))
-          }
+        test_that(glue("dbExistsTable {pkg}"), {
+          expect_true(table_exists <- dbExistsTable(con, airlines_table_obj))
+          expect_false(table_does_not_exist <- dbExistsTable(con, doesnotexist_table_obj))
         })
 
         # dbWriteTable ====
-        test_that("dbWriteTable", {
+        test_that(glue("dbWriteTable {pkg}"), {
           expect_true(dbWriteTable(con, "mtcars", mtcars))
         })
 
         # dbRemoveTable ====
-        test_that("dbRemoveTable", {
+        test_that(glue("dbRemoveTable {pkg}"), {
           expect_true(dbRemoveTable(con, "mtcars"))
         })
 
+        # dplyr + a string ----
+        test_that(glue("dplyr + a string {pkg}"), {
+          if (pkg == "RPostgreSQL") {
+            out <- tbl(con, Id(flights_table_obj)) %>%
+              filter(dest == "ORD") %>%
+              collect()
+          } else {
+            out <- tbl(con, flights_table_obj) %>%
+              filter(dest == "ORD") %>%
+              collect()
+          }
+
+          expect_identical(out, dest_ord)
+        })
+
+        # dplyr + a regex ====
+        test_that(glue("dplyr + a regex {pkg}"), {
+          if (pkg == "odbc") {
+            skip("odbc class inheritence isn't yet supported for dbplyr translations")
+          }
+          if (pkg == "RPostgreSQL") {
+            out <- tbl(con, Id(airlines_table_obj)) %>%
+              filter(str_detect(name, "\\.")) %>%
+              collect()
+          } else {
+            out <- tbl(con, airlines_table_obj) %>%
+              filter(str_detect(name, "\\.")) %>%
+              collect()
+          }
+
+          expect_identical(out, dot_names_dplyr)
+        })
+
+        # joins with df ====
+        test_that(glue("a join {pkg}"), {
+          local_df <- nycflights13::airlines
+          local_df$name_cleaned <- gsub(" Inc.", "", local_df$name)
+          local_df$name <- NULL
+          if (pkg == "RPostgreSQL") {
+            skip("RPostgreSQL does not support creation of temp tables")
+          } else {
+            out <- tbl(con, airlines_table_obj) %>%
+              left_join(local_df, by = "carrier", copy = TRUE) %>%
+              collect()
+          }
+
+          expect_identical(out, airlines_and_cleaned)
+        })
+
+
+        # dbGetRowsAffected ====
+        test_that(glue("dbGetRowsAffected {pkg}"), {
+          res <- dbSendStatement(
+            con,
+            glue("CREATE TABLE new_one AS SELECT * FROM {airlines_table} LIMIT 4")
+          )
+          out <- dbGetRowsAffected(res)
+          expect_identical(out, rows_affected)
+          dbClearResult(res)
+          # cleanup
+          dbClearResult(dbSendStatement(con, "DROP TABLE new_one"))
+        })
+
         # query with redaction ----
-        test_that("a redacted query is what we expect", {
+        test_that(glue("a redacted query is what we expect {pkg}"), {
           # the output of the recorded query is _not_ redacted, so we'll need to
           # redact them before checking
           redacted_flights <- unredacted_flights
@@ -402,5 +456,3 @@ for (pkg in names(db_pkgs)) {
     })
   })
 }
-
-# nolint end
