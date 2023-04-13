@@ -69,7 +69,10 @@ mean_delays <- function(group_col) {
 #  library(DBI)
 #  
 #  mean_delays <- function(group_col) {
-#    con <- dbConnect(RSQLite::SQLite())
+#    con <- dbConnect(
+#      RSQLite::SQLite(),
+#      dbname = "nycflights"
+#    )
 #    on.exit(dbDisconnect(con))
 #  
 #    query <- glue::glue(
