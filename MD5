@@ -1,7 +1,7 @@
-332e6f201f2c892f104e9ba56a2b62e1 *DESCRIPTION
-de1397abad32ef2f0420b2f62885aaee *NAMESPACE
-dc946f165112b98fae3638dc545ed7c4 *NEWS.md
-0c7d56b1e0b9ca191f9dad8037a609c0 *R/capture-requests.R
+e5d645e6536f346d977e8cef6b1433c0 *DESCRIPTION
+49d276d5237eb9b4badfa1df0b43eac4 *NAMESPACE
+32e0cc340bacaf378d0316479472d68f *NEWS.md
+7e38b0fecab7a63ac91aa7da6c59e975 *R/capture-requests.R
 dfc4833b5f6ea222813990251944f397 *R/connection.R
 28cc844eee7039f74ef072e82f046da1 *R/dbExistsTable.R
 59fc50e8ed037cabc8a078a9a9cc7801 *R/dbListTables-Fields.R
@@ -16,6 +16,7 @@ b5baf9148b4b6167452fe3fe317b022b *R/nycflights13-sql.R
 e64bc9417d3ab2c697e28ae2835dc5b3 *R/paths.R
 197f108e88d31ecec4623f2180bfee46 *R/quote.R
 6b925af3f75d9812b92a9bc0d98b1201 *R/redact.R
+c9d2db062a2104d50f1659d25c2e4b1c *R/serialize-bit64.R
 dfbea9c38eb78a41bbaac55f790501bb *R/transactions.R
 fc9ecc2db1c8edf63c3cdf7d4a7971a3 *R/use-dittodb.R
 183d6142bde19cf1c1034c70ae072b82 *R/utils.R
@@ -23,16 +24,16 @@ fc9ecc2db1c8edf63c3cdf7d4a7971a3 *R/use-dittodb.R
 fcb44c100eaab9b2415c9b8d106be997 *README.md
 792ad7d30ef74fb64e4bf3c7f3f50e1d *build/vignette.rds
 6c0d55fdbed09a65ce36d372c286abe9 *inst/REFERENCES.bib
-e450e081dbb6096345cd7794169c0087 *inst/WORDLIST
+749c8d741ddc0063f4e67af61dc6fca5 *inst/WORDLIST
 a677364f9ba977a000e74235e5c2f80c *inst/doc/developing-dittodb.R
 5742cd807972f23aa730c9f27230a45d *inst/doc/developing-dittodb.Rmd
-e62a64b48095f11d85cfcedc4fc3115b *inst/doc/developing-dittodb.html
+309b483d520f4264e2120811b5822854 *inst/doc/developing-dittodb.html
 1be18e9e64c84897d7079c30d422d3f1 *inst/doc/dittodb.R
 ffe7c87fca917935623319469b88995d *inst/doc/dittodb.Rmd
-b9cf3069ed540c8c5c4b7071bd16b7c2 *inst/doc/dittodb.html
+ee9a61fc4edace4444a43de63f002a6c *inst/doc/dittodb.html
 a40b0c7b4ab4d034ca7a14881801f6a2 *inst/doc/nycflights.R
 13c7de31475e9d009be31ab7084270fa *inst/doc/nycflights.Rmd
-bd99a30e67ae77745827b9649126c4ae *inst/doc/nycflights.html
+8ee217e28aef513ab0d3fe4b68e33597 *inst/doc/nycflights.html
 e8f054846281db201cbf86757f313476 *inst/nycflight_mocks/nycflights/SELECT-ef6317.R
 44a851b35017c509ad924576398db5e0 *inst/nycflights.sqlite
 ff9f738e60e0baabf403cad8f9363bbe *inst/paper.md
@@ -66,6 +67,7 @@ f96babce12c1447b8a8ab8c0f0edf995 *man/nycflights13_create_sqlite.Rd
 f97ac2ea1984eabf310b46c4c356c84a *man/nycflights_sqlite.Rd
 b6a48051353547057793173fd4cbda72 *man/redact_columns.Rd
 29849ef1accd397c2368c53b4c78a1b4 *man/sanitize_table_id.Rd
+8563be822296fdc98f61c5e8cb850cc5 *man/serialize_bit64.Rd
 754cca4a7d992fd30670ffd6b43326f4 *man/set_dittodb_debug_level.Rd
 b97c572c09a45b2506b76666bcc2a497 *man/use_dittodb.Rd
 45a351d86a4767430c6d70bce8473d05 *man/with_mock_path.Rd
@@ -90,6 +92,7 @@ e4b9dda2787a20b582f59d49abd914a2 *tests/testthat/test-mock-paths.R
 435fc1540947b60cbc6af0a110f0d8b1 *tests/testthat/test-paths.R
 e3ac49eb21ad9acc22aad922090d13b9 *tests/testthat/test-quote.R
 8e3219c5cb05b9912199d692e085d502 *tests/testthat/test-redact.R
+959a2ea946fa8c644e5b16a5660940fb *tests/testthat/test-serialize-bit64.R
 7f1666ab9920681b1376159b1513fb14 *tests/testthat/test-start-stop-mocks.R
 cae0d3527d50cc9aca31dbf6f90978bf *tests/testthat/test-transactions.R
 8e9f2610f3f35d0387adc8ca351b3b9e *tests/testthat/test-use-dittodb.R
