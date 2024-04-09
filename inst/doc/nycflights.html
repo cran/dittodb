@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mauricio Vargas and Jonathan Keane" />
 
-<meta name="date" content="2023-08-13" />
+<meta name="date" content="2024-04-08" />
 
 <title>nycflights13 data</title>
 
@@ -239,11 +239,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">nycflights13 data</h1>
 <h4 class="author">Mauricio Vargas and Jonathan Keane</h4>
-<h4 class="date">2023-08-13</h4>
+<h4 class="date">2024-04-08</h4>
 
 
 
-<p>{dittodb} uses the <a href="https://CRAN.R-project.org/package=nycflights13">{nycflights13}</a>
+<p><code>dittodb</code> uses the <a href="https://CRAN.R-project.org/package=nycflights13">{nycflights13}</a>
 dataset for testing and example purposes.</p>
 <div id="exploring-nycflights13" class="section level1">
 <h1>Exploring {nycflights13}</h1>
@@ -258,18 +258,18 @@ airlines, airports, weather, and planes.</p>
 </div>
 <div id="nycflights13-test-database" class="section level1">
 <h1>{nycflights13} test database</h1>
-<p>{dittodb} comes with a small subset of {nycflights13} to be used in
-testing and examples. To access it, use the convenience function
-<code>nycflights_sqlite()</code> which will return an
+<p><code>dittodb</code> comes with a small subset of {nycflights13} to
+be used in testing and examples. To access it, use the convenience
+function <code>nycflights_sqlite()</code> which will return an
 <code>RSQLite</code> connection the the <code>nycflights.sqlite</code>
-file included with {dittodb}. Alternatively, you can connect to this
-file with
+file included with <code>dittodb</code>. Alternatively, you can connect
+to this file with
 <code>system.file(&quot;nycflights.sqlite&quot;, package = &quot;dittodb&quot;)</code>.</p>
 </div>
 <div id="adding-nycflights13-data-to-a-database" class="section level1">
 <h1>Adding {nycflights13} data to a database</h1>
-<p>{dittodb} has a few functions that make loading {nycflights13} data
-into a database easier.
+<p><code>dittodb</code> has a few functions that make loading
+{nycflights13} data into a database easier.
 <code>nycflights13_create_sql(con, schema = &quot;nycflights&quot;)</code> will
 write the {nycflights13} data to the database connect to with
 <code>con</code> and write it to the schema <code>nycflights</code>.</p>

@@ -12,9 +12,9 @@
 
 <meta name="author" content="Jonathan Keane" />
 
-<meta name="date" content="2023-08-13" />
+<meta name="date" content="2024-04-08" />
 
-<title>Getting Started with {dittodb}</title>
+<title>Getting Started with dittodb</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -338,17 +338,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Getting Started with {dittodb}</h1>
+<h1 class="title toc-ignore">Getting Started with
+<code>dittodb</code></h1>
 <h4 class="author">Jonathan Keane</h4>
-<h4 class="date">2023-08-13</h4>
+<h4 class="date">2024-04-08</h4>
 
 
 
-<p>{dittodb} is designed to make it easy and fun to test functions that
-interact with a database. It works by looking for mock responses for
-each query you send while you run your tests and will seamlessly pretend
-that those mocks were provided by the database connection without
-needing a connection at all.</p>
+<p><code>dittodb</code> is designed to make it easy and fun to test
+functions that interact with a database. It works by looking for mock
+responses for each query you send while you run your tests and will
+seamlessly pretend that those mocks were provided by the database
+connection without needing a connection at all.</p>
 <div id="our-function-mean_delays" class="section level2">
 <h2>Our function <code>mean_delays()</code></h2>
 <p>To get started, imagine that we are working on a package that queries
@@ -537,10 +538,10 @@ with:</p>
 <span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div id="getting-setup-to-use-dittodb" class="section level2">
-<h2>Getting setup to use {dittodb}</h2>
+<h2>Getting setup to use <code>dittodb</code></h2>
 <p>Use the function <code>dittodb::use_dittodb()</code> to easily get
-started using {dittodb}. It will add {dittodb} to <code>Suggests</code>
-in the <code>DESCRIPTION</code> file and add
+started using <code>dittodb</code>. It will add <code>dittodb</code> to
+<code>Suggests</code> in the <code>DESCRIPTION</code> file and add
 <code>library(dittodb)</code> to
 <code>tests/testthat/helper.R</code>.</p>
 </div>
@@ -597,8 +598,8 @@ provided to the top of the list of paths to use.</p>
 <h3>Redacting</h3>
 <p>Sometimes (much? most? of the time!) there is sensitive data in your
 database that you don’t actually want to put into your test fixtures.
-{dittodb} allows you to specify columns that should always be redacted
-by specifying them like so:</p>
+<code>dittodb</code> allows you to specify columns that should always be
+redacted by specifying them like so:</p>
 <pre><code>start_db_capturing(redact_columns = c(&quot;sensitive_column&quot;, &quot;other_sensitive_column&quot;))</code></pre>
 <p>This will always redact the columns “sensitive_column” and
 “other_sensitive_column” every time a query is recorded that includes

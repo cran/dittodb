@@ -53,8 +53,9 @@ nycflights13_create_sql <- function(con, schema = "", ...) {
   } else {
     remote_schemas <- DBI::dbGetQuery(
       con,
-      glue::glue_sql("SELECT schema_name FROM information_schema.schemata",
-                     .con = con
+      glue::glue_sql(
+        "SELECT schema_name FROM information_schema.schemata",
+        .con = con
       )
     )
 
@@ -63,8 +64,9 @@ nycflights13_create_sql <- function(con, schema = "", ...) {
     if (!(schema %in% remote_schemas)) {
       DBI::dbExecute(
         con,
-        glue::glue_sql("CREATE SCHEMA {`schema`}",
-                       .con = con
+        glue::glue_sql(
+          "CREATE SCHEMA {`schema`}",
+          .con = con
         )
       )
     }
@@ -152,11 +154,11 @@ nycflights13_create_sqlite <- function(location = ":memory:", ...) {
 
 #' An SQLite connection to a subset of nycflights13
 #'
-#' Included with {dittodb} is a small subset of
+#' Included with `dittodb` is a small subset of
 #' [`nycflights13`](https://CRAN.R-project.org/package=nycflights13)
 #' prepopulated into a `sqlite` database.
 #'
-#' This database is helpful for getting to know {dittodb} and running example
+#' This database is helpful for getting to know `dittodb` and running example
 #' code. It contains a small subset of the data in nycflights13: namely only the
 #' flights and planes that had a destination of ORD or MDW (the codes for the
 #' two major airports in Chicago) in February of 2013. The airports table has

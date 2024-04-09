@@ -202,6 +202,8 @@ dbConnectTrace <- quote({
 })
 
 dbSendQueryTrace <- quote({
+  check_db_path(.dittodb_env)
+
   if (dittodb_debug_level(2)) {
     message(
       "The statement: \n", statement,
@@ -222,6 +224,7 @@ dbSendQueryTrace <- quote({
 })
 
 dbListTablesTrace <- quote({
+  check_db_path(.dittodb_env)
   thing <- returnValue()
   dput(
     thing,
@@ -231,6 +234,7 @@ dbListTablesTrace <- quote({
 })
 
 dbListFieldsTrace <- quote({
+  check_db_path(.dittodb_env)
   thing <- returnValue()
   name <- sanitize_table_id(name, ...)
   dput(
@@ -241,6 +245,7 @@ dbListFieldsTrace <- quote({
 })
 
 dbExistsTableTrace <- quote({
+  check_db_path(.dittodb_env)
   thing <- returnValue()
   name <- sanitize_table_id(name, ...)
   dput(
@@ -280,8 +285,8 @@ hash_db_object <- function(obj) {
   } else if (inherits(obj, "OdbcResult")) {
     hash <- hash(obj@statement)
   } else if (isS4(obj) && "m_sOperation" %in% methods::slotNames(obj)) {
-      # This is propably a teradata result object, so we can use m_sOperation as hash input.
-      hash <- hash(obj@m_sOperation)
+    # This is propably a teradata result object, so we can use m_sOperation as hash input.
+    hash <- hash(obj@m_sOperation)
   } else {
     # Stringify the result to get a hash is better than nothing
     hash <- hash(toString(obj))
@@ -329,7 +334,8 @@ stop_db_capturing <- function() {
   for (func in c(
     "dbSendQuery", "dbFetch", "dbConnect", "fetch", "dbListTables",
     "dbExistsTable", "dbListFields", "dbColumnInfo", "dbGetInfo",
-    "dbGetRowsAffected")) {
+    "dbGetRowsAffected"
+  )) {
     # make sure we untrace the function:
     # * from the DBI namespace
     # * from the DBI environment
@@ -427,4 +433,28 @@ get_redactor <- function() {
   }
 
   return(NULL)
+}
+
+#' Check for dittodb environment path
+#'
+#' This function should generally not be used, but must be exported for the
+#' query recording function to work properly
+#'
+#' @param .dittodb_env Environment object
+#'
+#' @return `NULL`, invisibly.
+#' @keywords internal
+#' @export
+check_db_path <- function(.dittodb_env) {
+  if (is.null(.dittodb_env$db_path)) {
+    rlang::abort(
+      message = c("Database capture failed",
+        "*" = "The database connection object was created before calling 'start_db_capturing()'",
+        "*" = "Please ensure the connection is created after calling 'start_db_capturing()'."
+      ),
+      call = rlang::caller_env()
+    )
+  }
+
+  return(invisible())
 }

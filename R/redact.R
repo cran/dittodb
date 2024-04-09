@@ -1,7 +1,7 @@
 #' Redact columns from a dataframe with the default redactors
 #'
 #' This function redacts the columns specified in `columns` in the data given in
-#' `data` using {dittodb}'s standard redactors.
+#' `data` using `dittodb`'s standard redactors.
 #'
 #' The column names given in the `columns` argument are treated as regular
 #' expressions, however they always have `^` and `$` added to the beginning and
@@ -73,11 +73,17 @@ standard_redactors <- function(data, columns) {
     col <- data[[x]]
 
     if (inherits(col, "integer")) {
-      return(function(data) return(rep(9L, length(data))))
+      return(function(data) {
+        return(rep(9L, length(data)))
+      })
     } else if (inherits(col, "numeric")) {
-      return(function(data) return(rep(9, length(data))))
+      return(function(data) {
+        return(rep(9, length(data)))
+      })
     } else if (inherits(col, "character")) {
-      return(function(data) return(rep("[redacted]", length(data))))
+      return(function(data) {
+        return(rep("[redacted]", length(data)))
+      })
     } else if (inherits(col, "POSIXct")) {
       # should this actually be POSIXt? or have a separate POSIXlt?
       return(function(data) {

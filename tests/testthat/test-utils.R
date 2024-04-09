@@ -44,6 +44,7 @@ test_that("we can remove the unique dbplyr names", {
   with_unique <- "SELECT *\nFROM `airlines` AS `zzz26`"
   with_dbplyr <- "SELECT *\nFROM `airlines` AS `dbplyr_009`"
   with_dbplyr2 <- "SELECT *\nFROM `airlines` AS `q01`"
+  with_dbplyr3 <- "SELECT *\nFROM `airlines` AS `dbplyr_K614OHb94V`"
   no_unique <- "SELECT *\nFROM `airlines` AS `my_special_airlines_table`"
   with_quotes <- "SELECT *\nFROM \"airlines\" AS \"zzz16\""
   with_unique_long <- "SELECT *\nFROM `airlines` AS `zzz26666`"
@@ -54,6 +55,7 @@ test_that("we can remove the unique dbplyr names", {
   expect_identical(ignore_dbplyr_unique_names(with_unique), expected)
   expect_identical(ignore_dbplyr_unique_names(with_dbplyr), expected)
   expect_identical(ignore_dbplyr_unique_names(with_dbplyr2), expected)
+  expect_identical(ignore_dbplyr_unique_names(with_dbplyr3), expected)
   expect_identical(ignore_dbplyr_unique_names(no_unique), no_unique)
   expect_identical(ignore_dbplyr_unique_names(with_unique_long), expected)
   expect_identical(
@@ -73,7 +75,8 @@ test_that("debugging helper", {
   expect_false(dittodb_debug_level(2))
   expect_false(dittodb_debug_level(3))
   withr::with_options(
-    c("dittodb.debug" = 2), {
+    c("dittodb.debug" = 2),
+    {
       expect_true(dittodb_debug_level(-1))
       expect_true(dittodb_debug_level(0))
       expect_true(dittodb_debug_level(1))
@@ -138,7 +141,8 @@ test_that("testing_port", {
     list(
       "DITTODB_MARIA_TEST_PORT" = NA,
       "DITTODB_PG_TEST_PORT" = NA
-    ), {
+    ),
+    {
       expect_identical(testing_port("maria"), 3306L)
       expect_identical(testing_port("postgres"), 5432L)
     }
@@ -149,7 +153,8 @@ test_that("testing_port", {
     list(
       "DITTODB_MARIA_TEST_PORT" = "6033",
       "DITTODB_PG_TEST_PORT" = "2345"
-    ), {
+    ),
+    {
       expect_identical(testing_port("maria"), 6033L)
       expect_identical(testing_port("postgres"), 2345L)
     }
